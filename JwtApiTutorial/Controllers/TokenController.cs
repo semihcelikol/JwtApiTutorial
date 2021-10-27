@@ -24,7 +24,7 @@ namespace JwtApiTutorial.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public TokenResponse Get([FromBody] TokenRequest request)
+        public ActionResult Get([FromBody] TokenRequest request)
         {
             TokenResponse ret = new TokenResponse();
             
@@ -36,7 +36,10 @@ namespace JwtApiTutorial.Controllers
 
                 if (user == null)
                 {
-                    BadRequest("Kullanıcı adı yada şifre geçerli değildir.");
+                    ret.Success = false;
+                    ret.Message = "Kullanıcı adı ya da şifre geçerli değildir.";
+
+                    return BadRequest(ret);
                 }
 
                 ret = TokenGenerator.GenerateToken(user,
@@ -46,7 +49,10 @@ namespace JwtApiTutorial.Controllers
 
                 if (String.IsNullOrEmpty(ret.Value))
                 {
-                    BadRequest("Token üretilemedi.");
+                    ret.Success = false;
+                    ret.Message = "Token üretilemedi";
+
+                    return BadRequest(ret);
                 }
             }
             catch (Exception ex)
@@ -55,7 +61,7 @@ namespace JwtApiTutorial.Controllers
                 ret.Message = ex.ToString();
             }
 
-            return ret;
+            return Ok(ret);
         }
     }
 }

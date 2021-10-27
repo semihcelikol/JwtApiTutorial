@@ -28,11 +28,14 @@ namespace JwtApiTutorial
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // + Semih JWT
             string secretStr = Configuration["Application:Secret"];
             byte[] secret = Encoding.UTF8.GetBytes(secretStr);
+            // -
 
             services.AddControllers();
 
+            // + Semih JWT
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -52,6 +55,7 @@ namespace JwtApiTutorial
                     ValidateAudience = true
                 };
             });
+            // -
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,7 +66,9 @@ namespace JwtApiTutorial
                 app.UseDeveloperExceptionPage();
             }
 
+            // + Semih JWT
             app.UseAuthentication();
+            // -
             app.UseHttpsRedirection();
 
             app.UseRouting();
